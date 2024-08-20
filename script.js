@@ -37,13 +37,6 @@ function checkChosenNumber() {
     // Retrieve game data from local Storage
     const storedGameData = JSON.parse(localStorage.getItem('gameData'));
 
-    // Check if game data exists from local Storage
-    if (!storedGameData) {
-        errorMessage.textContent = "Error: Game data not found. Please restart the game.";
-        errorMessage.style.color = "red";
-        return;
-    }
-
     const { min, max, randomNumber, attemptsLeft} = storedGameData;
 
     // Check if chosen value is within the min and max range
@@ -64,7 +57,6 @@ function checkChosenNumber() {
         submitButton.textContent = "Play Again";
         chosenNumber.style.border = "1px solid green";
         submitButton.style.backgroundColor = "green";
-        console.log(localStorage.getItem('gameData'));
         setTimeout(() => {
             submitButton.style.backgroundColor = "black";
             chosenNumber.style.border = "";
@@ -188,6 +180,11 @@ function hideAllContainers() {
     localStorage.removeItem('gameData');
     localStorage.removeItem('storedUserName');
 }
+
+
+// Current Year Function 
+const currentYear = new Date().getFullYear();
+document.getElementById('currentYear').textContent = currentYear;
 
 // Event Listeners to run specific functions 
 playButton.addEventListener('click', checkMinAndMax);
