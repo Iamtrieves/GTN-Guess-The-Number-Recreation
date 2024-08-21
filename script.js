@@ -60,6 +60,8 @@ function checkChosenNumber() {
         setTimeout(() => {
             submitButton.style.backgroundColor = "black";
             chosenNumber.style.border = "";
+            errorMessage.textContent = "";
+            chosenNumber.style.border = "";
         }, 2000)
     } 
     else {
@@ -75,6 +77,10 @@ function checkChosenNumber() {
             errorMessage.textContent = `You have exhausted your trials ${storedUserName || 'user'}! ${randomNumber} is the winning number.`;
             submitButton.textContent = "Play Again";
             chosenNumber.style.border = "1px solid red";
+            setTimeout(() => {
+                errorMessage.textContent = "";
+                chosenNumber.style.border = "";
+            }, 2000)
         }
 
         // Update game data with remaining attempts
@@ -179,7 +185,10 @@ function hideAllContainers() {
     containerThree.classList.add('hidden');
     localStorage.removeItem('gameData');
     localStorage.removeItem('storedUserName');
-    errorMessage.textContent = "";
+}
+
+function handlePlayAgain() {
+    hideAllContainers();
 }
 
 
@@ -187,16 +196,35 @@ function hideAllContainers() {
 const currentYear = new Date().getFullYear();
 document.getElementById('currentYear').textContent = currentYear;
 
+
+// Event Listeners for Enter key presses
+userName.addEventListener('keydown', (event) => {
+if (event.key === 'Enter') {
+    checkUserNameInput();
+}
+});
+
+containerTwo.addEventListener('keydown', (event) => {
+if (event.key === 'Enter') {
+    checkMinAndMax();
+}
+});
+
+chosenNumber.addEventListener('keydown', (event) => {
+if (event.key === 'Enter') {
+    checkChosenNumber();
+}
+});
+
 // Event Listeners to run specific functions 
 playButton.addEventListener('click', checkMinAndMax);
 okButton.addEventListener('click', checkUserNameInput);
 submitButton.addEventListener('click', () => {
     if (submitButton.textContent === 'Play Again') {
         hideAllContainers();
-        // Reset game state if needed (e.g., clear local storage)
         return;
-      }
-      checkChosenNumber();
+    }
+    checkChosenNumber();
 });
 window.onload = hideAllContainers;
 
