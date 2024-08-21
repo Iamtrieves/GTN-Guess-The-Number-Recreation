@@ -52,7 +52,7 @@ function checkChosenNumber() {
     // Check if chosen value matches the random number
     if (chosenValue === randomNumber) {
         const storedUserName = localStorage.getItem('storedUserName') || 'user'; // Access username within the block
-        errorMessage.textContent = `Congratulations ${storedUserName}!, ${chosenValue} is the correct answer!`;
+        errorMessage.textContent = `Congratulations ${storedUserName}! ${chosenValue} is the correct answer!`;
         errorMessage.style.color = 'green';
         submitButton.textContent = "Play Again";
         chosenNumber.style.border = "1px solid green";
