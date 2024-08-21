@@ -179,6 +179,7 @@ function hideAllContainers() {
     containerThree.classList.add('hidden');
     localStorage.removeItem('gameData');
     localStorage.removeItem('storedUserName');
+    errorMessage.textContent = "";
 }
 
 
