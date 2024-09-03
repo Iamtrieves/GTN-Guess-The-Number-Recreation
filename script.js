@@ -24,27 +24,28 @@ let attemptsLeft = 5;
 
 // Function to check the chosen number input 
 function checkChosenNumber() {
-    const chosenValue = parseFloat(chosenNumber.value)
+    const chosenValue = parseFloat(chosenNumber.value);
+
+    // Validate input
     if (chosenValue === "" || isNaN(chosenValue)) {
         errorMessage.textContent = "Please enter a number";
         errorMessage.style.color = 'red';
         setTimeout(() => {
-            errorMessage.textContent = "";
+        errorMessage.textContent = "";
         }, 2000);
         return;
-    }  
-    
-    // Retrieve game data from local Storage
-    const storedGameData = JSON.parse(localStorage.getItem('gameData'));
+    }
 
-    const { min, max, randomNumber, attemptsLeft} = storedGameData;
+    // Retrieve game data from local storage
+    const storedGameData = JSON.parse(localStorage.getItem('gameData'));
+    const { min, max, randomNumber, attemptsLeft } = storedGameData;
 
     // Check if chosen value is within the min and max range
     if (chosenValue < min || chosenValue > max) {
         errorMessage.textContent = `Please enter a number between ${min} and ${max}`;
         errorMessage.style.color = 'red';
         setTimeout(() => {
-            errorMessage.textContent = "";
+        errorMessage.textContent = "";
         }, 2000);
         return;
     }
@@ -55,6 +56,7 @@ function checkChosenNumber() {
         errorMessage.textContent = `Congratulations ${storedUserName}! ${chosenValue} is the correct answer!`;
         errorMessage.style.color = 'green';
         submitButton.textContent = "Play Again";
+        submitButton.classList.add('over');
         chosenNumber.style.border = "1px solid green";
         submitButton.style.backgroundColor = "green";
         setTimeout(() => {
@@ -62,13 +64,15 @@ function checkChosenNumber() {
             chosenNumber.style.border = "";
             errorMessage.textContent = "";
             chosenNumber.style.border = "";
-        }, 2000)
-    } 
-    else {
-        let attemptsLeft = storedGameData.attemptsLeft - 1; // Use let here
-        const attemptsText = attemptsLeft > 1? "attempts" : "attempt";
-        const storedData = JSON.parse(localStorage.getItem('gameData')) || {}; // Handle missing game data
-        const storedUserName = localStorage.getItem('storedUserName') || 'defaultUser'; // Handle missing 
+            submitButton.classList.add('over');
+        }, 2000);
+    // Add the if statement here to check if submitButton class contains "over"
+    } else {
+        let attemptsLeft = storedGameData.attemptsLeft - 1;
+        attemptsLeft = Math.max(0, attemptsLeft); // Ensure attemptsLeft doesn't go negative
+        const attemptsText = attemptsLeft > 1 ? "attempts" : "attempt";
+        const storedUserName = localStorage.getItem('storedUserName') || 'defaultUser';
+
         if (attemptsLeft > 0) {
             errorMessage.textContent = `${chosenValue} is wrong, you have ${attemptsLeft} ${attemptsText} remaining.`;
             errorMessage.style.color = 'red';
@@ -76,21 +80,31 @@ function checkChosenNumber() {
         } else {
             errorMessage.textContent = `You have exhausted your trials ${storedUserName || 'user'}! ${randomNumber} is the winning number.`;
             submitButton.textContent = "Play Again";
+            submitButton.classList.add("over");
             chosenNumber.style.border = "1px solid red";
-            setTimeout(() => {
-                errorMessage.textContent = "";
-                chosenNumber.style.border = "";
-            }, 2000)
+        setTimeout(() => {
+            errorMessage.textContent = "";
+            chosenNumber.style.border = "";
+        }, 2000);
         }
 
         // Update game data with remaining attempts
         storedGameData.attemptsLeft = attemptsLeft;
         localStorage.setItem('gameData', JSON.stringify(storedGameData));
     }
+
     // Reset chosen number input field
     chosenNumber.value = "";
-}
 
+    // Add event listener to submitButton after setting its class and text
+    if (submitButton.classList.contains('over') && submitButton.        textContent === 'Play Again') {
+            submitButton.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                hideAllContainers();
+            }
+        });
+    }
+}
 
 // function to check the Minimum and Maximum input 
 function checkMinAndMax() {
@@ -185,10 +199,8 @@ function hideAllContainers() {
     containerThree.classList.add('hidden');
     localStorage.removeItem('gameData');
     localStorage.removeItem('storedUserName');
-}
-
-function handlePlayAgain() {
-    hideAllContainers();
+    submitButton.textContent = "Submit";
+    submitButton.classList.remove("over");
 }
 
 
@@ -222,10 +234,8 @@ okButton.addEventListener('click', checkUserNameInput);
 submitButton.addEventListener('click', () => {
     if (submitButton.textContent === 'Play Again') {
         hideAllContainers();
-        return;
+        submitButton.textContent = "Submit";
     }
     checkChosenNumber();
 });
 window.onload = hideAllContainers;
-
-
